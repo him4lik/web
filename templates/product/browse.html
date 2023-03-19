@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   <title>INDITAN | Browse Page</title>
+{% endblock %}
+{% block browse-page %}
+   {%for variant in variants%}
+      <a href="{% url 'detail'%}?product={{variant.product}}&category={{variant.category}}&title={{variant.title}}&parameters={{variant.parameters}}">
+         {{variant.title}}
+         <video id="vid" autoplay loop width=300 preload="true">
+            <source src={{variant.video}} type='video/mp4'>
+         </video>
+      </a>
+   {%endfor%}
+   <script type="text/javascript">
+            var vid = document.getElementById("vid");
+            vid.addEventListener("timeupdate", function () {
+                if(this.currentTime >= 10.0) {
+                    this.currentTime = 0.0;
+                }
+            });
+   </script>
+{% endblock %}
+      

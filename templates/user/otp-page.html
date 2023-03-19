@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+   <head>
+   </head>
+   <body >
+      <form method='POST' action=''>
+         {% csrf_token%}
+         <div>
+            {{form.non_field_errors}}
+            {%for field in form%}
+            <div>
+               {{field}}
+            </div>
+            {%endfor%}
+         </div>
+         <div>
+            <input type='Submit' value='Login' >
+         </div>
+      </form>
+   </body>
+</html>
