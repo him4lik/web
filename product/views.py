@@ -1,7 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django import views
 import requests
-from datetime import date
 from web.settings import API_HOST
 from lib.common import get_token, get_user
 
