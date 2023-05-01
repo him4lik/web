@@ -64,3 +64,26 @@ class LogoutView(views.View):
 		response = redirect(reverse(self.redirect_url))
 		response.delete_cookie('bearer')#, secure=True)
 		return response
+
+class UserProfileView(views.View):
+	template_name = 'user/user-profile.html'
+	
+	def get(self, request):
+		context = {}
+		return render(request, self.template_name, context)
+
+class UserSettingsView(views.View):
+	template_name = 'user/user-settings.html'
+	
+	def get(self, request):
+		context = {}
+		return render(request, self.template_name, context)
+
+class UserOrdersView(views.View):
+	template_name = 'user/user-orders.html'
+	
+	def get(self, request):
+		context = {}
+		return render(request, self.template_name, context)
+
+

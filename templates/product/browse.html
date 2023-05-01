@@ -4,6 +4,50 @@
    <title>INDITAN | Browse Page</title>
 {% endblock %}
 {% block browse-page %}
+   <!-- <div class="side-bar">
+        <div class="close-btn">
+            <div><img src="{%static 'icons/close.png'%}" ></div>
+        </div>
+        <div class="menu">
+         <form method='POST' action=''>
+         {% csrf_token%}
+         {%for form in forms%}
+         <div class="item">
+                <a class="dropdown">{{form.0}}</a>
+                <div class="sub-menu">
+                  {%for field in form.1%}
+                    <a href="{% url 'browse'%}?product={{prod}}&category={{k}}" class="sub-item">{{field}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+         {%endfor%}
+         <div>
+            <input type='Submit' value='Apply fiters' >
+         </div>
+      </form>
+
+        </div>
+   </div>
+
+   <div class="nav-menu">
+      <p>Filter</p>
+   </div> -->
+      
+      <form method='POST' action=''>
+         {% csrf_token%}
+         {%for form in forms%}
+            {{form.0}}
+               {{form.1.non_field_errors}}
+               {%for field in form.1%}
+               {{field}}
+               {%endfor%}
+         {%endfor%}
+         <div>
+            <input type='Submit' value='Apply fiters' >
+         </div>
+      </form>
+   
+
    {%for variant in variants%}
       <a href="{% url 'detail'%}?product={{variant.product}}&category={{variant.category}}&title={{variant.title}}&parameters={{variant.parameters}}">
          {{variant.title}}
@@ -19,6 +63,7 @@
                     this.currentTime = 0.0;
                 }
             });
+
    </script>
 {% endblock %}
       
