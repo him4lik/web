@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html>
-   <head>
-   </head>
-   <body >
-      <form method='POST' action=''>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   <title>INDITAN | Home Page</title>
+{% endblock %}
+{%block navbar%}
+{%endblock%}
+{% block login-page %}
+<div class="login-otp-form">
+   <div>
+      <p>Verify OTP</p>
+   </div>
+   <form method='POST' action=''>
          {% csrf_token%}
          <div>
             {{form.non_field_errors}}
@@ -17,5 +24,6 @@
             <input type='Submit' value='Login' >
          </div>
       </form>
-   </body>
-</html>
+   </div>
+{% endblock %}
+

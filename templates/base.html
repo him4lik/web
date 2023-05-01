@@ -38,6 +38,9 @@
         <div class="menu">
             {% if user.is_authenticated%}
             <div class="item">
+                <a href="{% url 'user_profile' %}">Profile</a>
+                <a href="{% url 'user_orders' %}">Your Orders</a>
+                <a href="{% url 'user_settings' %}">Settings</a>
                 <a href="{% url 'logout' %}">LOGOUT</a>
             </div>
             {%else%}
@@ -84,6 +87,14 @@
     {% block prod-detail-page %}
     {% endblock %}
     {% block cart-page %}
+    {% endblock %}
+    {% block login-page %}
+    {% endblock %}
+    {% block user-profile %}
+    {% endblock %}
+    {% block user-settings %}
+    {% endblock %}
+    {% block user-orders %}
     {% endblock %}
 
 	<script type="text/javascript">
