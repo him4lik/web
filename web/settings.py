@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +78,9 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
         ]
 
-WSGI_APPLICATION = 'web.wsgi.application'
+# WSGI_APPLICATION = 'web.wsgi.application'
+ASGI_APPLICATION = 'web.asgi.application'
+
 
 
 # Database
