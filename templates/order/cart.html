@@ -4,5 +4,31 @@
    <title>INDITAN | Cart</title>
 {% endblock %}
 {% block cart-page %}
-   Cart
+  <h1 id=ct> Cart</h1>
+  <button id='increment'>+</button>
+  <button id= 'decrement'>-</button>
+   <script >
+      var ws = new WebSocket('ws://127.0.0.1:8001/cart/asc/')
+      ws.onopen = function(event){
+         console.log('WS connection open', event)
+         ws.send('message from client')
+      }
+      document.getElementById("increment").onclick = ws.send()
+      document.getElementById("decrement").onclick = de_send()
+      ws.onmessage = function(event){
+         console.log('Message received from server', event)
+         if (event.data == "increment"){
+         document.getElementById("ct").innerText = "incremented"
+         }
+         else {
+          document.getElementById("ct").innerText = "decremented"  
+         }
+      }
+      ws.onerror = function(event){
+         console.log('WS error occured', event)
+      }
+      ws.onclose = function(event){
+         console.log('WS connection closed', event)
+      }
+   </script>
 {% endblock %}

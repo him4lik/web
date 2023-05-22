@@ -4,6 +4,7 @@
    <title>INDITAN | Browse Page</title>
 {% endblock %}
 {% block browse-page %}
+   <h1 id=ct> Cart</h1>
    <!-- <div class="side-bar">
         <div class="close-btn">
             <div><img src="{%static 'icons/close.png'%}" ></div>
@@ -56,17 +57,78 @@
             <source src={{variant.video}} type='video/mp4'>
          </video>
       </a>
-      <button>Add to Cart</button>
+      <button id="decrement">-</button>
+      <button id="increment">+</button>
+      <p id="num"></p>
+      <button id="add-to-cart">Add to Cart</button>
    </div>
    {%endfor%}
    <script type="text/javascript">
-            var vid = document.getElementById("vid");
-            vid.addEventListener("timeupdate", function () {
-                if(this.currentTime >= 10.0) {
-                    this.currentTime = 0.0;
-                }
-            });
+
+      var ws = new WebSocket('ws://127.0.0.1:8001/ac/product/add-to-cart/')
+
+      ws.onopen = function(event){
+         console.log('WS connection open', event)
+         ws.send('message from client')
+      }
+
+      ws.onmessage = function(event){
+         console.log('Message received from server', event)
+      }
+
+      ws.onerror = function(event){
+         console.log('WS error occured', event)
+      }
+
+      ws.onclose = function(event){
+         console.log('WS connection closed', event)
+      }
+
+      document.getElementById("add-to-cart").onclick = function(){
+         var add = document.getElementById("add-to-cart")
+         var incre = document.getElementById("increment")
+         var decre = document.getElementById("decrement")
+         var quant = document.getElementById("num")
+         if (add.style.display !== "none"){
+            incre.style.display = "block";
+            decre.style.display = "block";
+            quant.style.display = "block";
+            quant.innerText = "1";
+            add.style.display = "none";
+         }
+         else {
+            add.style.display = "block";
+         }
+      }
+
+      document.getElementById("increment").onclick = function(){
+         var quant = document.getElementById("num")
+         quant.innerText = parseInt(quant.innerText)+1;
+      }
+
+      document.getElementById("decrement").onclick = function(){
+         var add = document.getElementById("add-to-cart")
+         var incre = document.getElementById("increment")
+         var decre = document.getElementById("decrement")
+         var quant = document.getElementById("num")
+         if (quant.innerText === "1"){
+            add.style.display = "block";
+            incre.style.display = "none";
+            decre.style.display = "none";
+            quant.style.display = "none";
+         }
+         quant.innerText = parseInt(quant.innerText)-1;
+      }
+
+
+      var vid = document.getElementById("vid");
+      vid.addEventListener("timeupdate", function () {
+          if(this.currentTime >= 10.0) {
+              this.currentTime = 0.0;
+          }
+      });
 
    </script>
+   
 {% endblock %}
       

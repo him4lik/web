@@ -177,3 +177,19 @@ body a:link{
     align-items: center;
     height: 80vh;
 }
+
+#add-to-cart{
+    display: block;
+}
+
+#increment{
+    display: none;
+}
+
+#decrement{
+    display: none;
+}
+
+#num{
+    display: none;
+}
