@@ -1,4 +1,4 @@
-from lib.common import get_token, get_user
+from lib.common import get_token, get_user, get_refresh_token
 
 class AssignUser(object):
     def __init__(self, get_response):
@@ -19,8 +19,16 @@ class AssignUser(object):
         """
         Called just before Django calls the view.
         """
-        token = get_token(request)
-        user = get_user(token)
-        request.user = user
-        request.token = token
+        access_token = get_token(request)
+        refresh_token = get_refresh_token(request)
+        user = get_user(access_token)
+        # if not user['is_authenticated'] and refresh_token:
+        #     access_token = refresh_access_token(refresh_token)
+        #     user = get_user(access_token)
+        if user['is_authenticated']:
+            request.user = user
+            request.token = access_token
+        else:
+            request.user = user
+            request.token = ''
         return None

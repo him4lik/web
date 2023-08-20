@@ -5,6 +5,11 @@ from web.settings import API_HOST
 from lib.common import get_token, get_user
 from product.forms import FilterForm
 import json
+from lib.apis import (
+	get_as_user, 
+	get_variants
+)
+from lib.base_classes import BaseView
 
 def get_products_categories(token=''):
 	url = API_HOST+'inventory/product-category/'
@@ -19,8 +24,9 @@ class HomePageView(views.View):
 
 	def get(self, request):
 		context = {}
-		print(request.user)
-		context['data'] = get_products_categories(token=request.token)
+		context['data'] = get_as_user(
+			API_HOST+'inventory/product-category/',
+			token = request.token)
 		context['user'] = request.user
 		print(context)
 		return render(request, self.template_name, context)
@@ -29,48 +35,59 @@ class HomePageView(views.View):
 		context = {}
 		return render(request, self.template_name, context)
 
-class ProductBrowseView(views.View):
+class ProductBrowseView(BaseView):
 	template_name = 'product/browse.html'
 	form = FilterForm
-	
-	def get_variants(self, params):
-		url = API_HOST+'inventory/browse/'
-		response = requests.get(url, params=params)
-		#validate response
-		data = response.json() #if validates
-		return data
 
-	def get(self, request):
-		token=get_token(request)
+	def get_context_data(self, request):
+		token = request.token
+		context = {}
+		forms = []
+		#get_variants
 		params ={
 			'product':request.GET.get('product', ''),
 			'category':request.GET.get('category', '')
 		}
-		context = {}
-		data = self.get_variants(params)
-		context['variants'] = data['variants']
-		context['filter_opts'] = data['filter_opts']
-		context['data'] = get_products_categories(token=token)
-		context['user'] = get_user(token)
+		variants = get_variants(params, token)
+		print(variants)
+		#get_product_vategories
+		products_categories = get_products_categories(token=token)
+		
+		#get_forms_data
 		choices = {}
-		for parameter,values in data['filter_opts'].items():
+		for parameter,values in variants['filter_opts'].items():
 			choices[parameter]=[]
 			for val in values:
 				choices[parameter].append((parameter, val))
-		forms = []
 		for choice, values in choices.items():
 			forms.append([choice, self.form(values)])
-		context['forms'] = forms
-		return render(request, self.template_name, context)
 
-	def post(self, request):
-		token=get_token(request)
+		filters = []
+		for choice, values in choices.items():
+			filters.append([choice, values])
+
+		#context
+		context['variants'] = variants['variants']
+		print(context['variants'])
+		context['filter_opts'] = variants['filter_opts']
+		context['data'] = products_categories
+		context['user'] = request.user
+		context['forms'] = forms
+		context['product'] = request.GET.get('product', '')
+		context['category'] = request.GET.get('category', '')
+		context['filters'] = filters
+
+		return context
+
+	def post_context_data(self, request):
+		token = request.token
+		context = {}
+		forms = []
 		params ={
 			'product':request.GET.get('product', ''),
 			'category':request.GET.get('category', '')
 		}
-		context = {}
-		data = self.get_variants(params)
+		data = get_variants(params, token)
 		context['variants'] = data['variants']
 		context['filter_opts'] = data['filter_opts']
 		context['data'] = get_products_categories(token=token)
@@ -94,18 +111,15 @@ class ProductBrowseView(views.View):
 			choices[parameter]=[]
 			for val in values:
 				choices[parameter].append((parameter, val))
-		forms = []
 		for choice, values in choices.items():
 			forms.append([choice, self.form(values, {'parameter_val':([f"{choice},{i}" for i in data.get(choice, [])])})])
 		context['forms']=forms
 		if any([fm[1].is_valid() for fm in forms]):
 			params['parameters'] = json.dumps(data)
-			context['variants'] = self.get_variants(params)['variants']
-			return render(request, self.template_name, context)
-		else:
-			print(request.POST, request.GET, context)
-			return render(request, self.template_name, context)
-
+			context['variants'] = get_variants(params, token)['variants']
+		context['product'] = request.GET.get('product', '')
+		context['category'] = request.GET.get('category', '')
+		return context
 
 class ProductDetailView(views.View):
 	template_name = 'product/detail.html'
@@ -125,7 +139,7 @@ class ProductDetailView(views.View):
 			'title':request.GET.get('title', None)
 		}
 		context = {}
-		data = self.get_variants(params)
+		data = self.get_variants(params, token)
 		context['variants'] = data['variants']
 		context['filter_opts'] = data['filter_opts']
 		context['data'] = get_products_categories(token=token)
