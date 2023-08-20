@@ -20,10 +20,10 @@
         <div class="menu">
         	{% for k, v in data.items %}
             <div class="item">
-                <a class="dropdown">{{k}}</a>
+                <a class="dropdown">{{v.category_name}}</a>
                 <div class="sub-menu">
-                	{%for prod in v%}
-                    <a href="{% url 'browse'%}?product={{prod}}&category={{k}}" class="sub-item">{{prod}}</a>
+                	{%for id, name in v.variants.items%}
+                    <a href="{% url 'browse'%}?product={{name}}&category={{v.category_name}}" class="sub-item">{{name}}</a>
                     {% endfor %}
                 </div>
             </div>

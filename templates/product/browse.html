@@ -4,36 +4,13 @@
    <title>INDITAN | Browse Page</title>
 {% endblock %}
 {% block browse-page %}
-   <!-- <div class="side-bar">
-        <div class="close-btn">
-            <div><img src="{%static 'icons/close.png'%}" ></div>
-        </div>
-        <div class="menu">
-         <form method='POST' action=''>
-         {% csrf_token%}
-         {%for form in forms%}
-         <div class="item">
-                <a class="dropdown">{{form.0}}</a>
-                <div class="sub-menu">
-                  {%for field in form.1%}
-                    <a href="{% url 'browse'%}?product={{prod}}&category={{k}}" class="sub-item">{{field}}</a>
-                    {% endfor %}
-                </div>
-            </div>
-         {%endfor%}
-         <div>
-            <input type='Submit' value='Apply fiters' >
-         </div>
-      </form>
-
-        </div>
+   <div style="margin-left: 40px;margin-top: 40px;">
+   <div id="product" style="font-size: 35px;display:inline-block;">{{product}}</div>
+   <div style="font-size: 20px;display:inline-block;"><div style="display:inline-block;">[</div><div style="display:inline-block;" id="category">{{category}}</div><div style="display:inline-block;">]</div></div>
+   <div style="font-size: 15px;display:inline-block;">({{variants|length}})</div>
+   <div style="font-size: 20px">{{variants.0.product_description}}</div>
    </div>
-
-   <div class="nav-menu">
-      <p>Filter</p>
-   </div> -->
-      
-      <form method='POST' action=''>
+     <!--  <form method='POST' action=''>
          {% csrf_token%}
          {%for form in forms%}
             {{form.0}}
@@ -45,28 +22,238 @@
          <div>
             <input type='Submit' value='Apply fiters' >
          </div>
-      </form>
+      </form> -->
    
-
+   {%for filter in filters%}
+   {{filter.0}}<br>
+   {%for parameter in filter.1%}
+   <input class="filters" type="checkbox" name={{filter.0}} value={{parameter.1}}>{{parameter.1}}<br>
+   {%endfor%}
+   {%endfor%}
+   <!-- <div class="browse-grid">
    {%for variant in variants%}
-   <div>
+   <div variant_id={{variant.variant_id}} class="browse-item">
       <a href="{% url 'detail'%}?product={{variant.product}}&category={{variant.category}}&title={{variant.title}}&parameters={{variant.parameters}}">
-         {{variant.title}}
-         <video id="vid" autoplay loop width=300 preload="true">
+      <div>
+         <video id="vid" autoplay loop muted preload="true" class="browse-video">
             <source src={{variant.video}} type='video/mp4'>
          </video>
+      </div>
+      <div style="display:flex;flex-direction: row; "> 
+      <a href="{% url 'detail'%}?product={{variant.product}}&category={{variant.category}}&title={{variant.title}}&parameters={{variant.parameters}}">
+      <div style="flex: 2">
+         <div>{{variant.title}}</div>
+         <div>{{variant.price}}</div>
+      </div>
       </a>
-      <button>Add to Cart</button>
+      <div style="flex: 1">
+         <button class="decrement">-</button>
+         <p quantity={{variant.cart_quantity}} class="num"></p>
+         <button class="increment">+</button>
+         <button class="add-to-cart" style="margin:none;float: right;">Add to Cart</button>
+      </div>
+      </div>
    </div>
    {%endfor%}
-   <script type="text/javascript">
-            var vid = document.getElementById("vid");
-            vid.addEventListener("timeupdate", function () {
-                if(this.currentTime >= 10.0) {
-                    this.currentTime = 0.0;
-                }
-            });
+   </div> -->
 
-   </script>
-{% endblock %}
+
+   <div id="variants_grid" class="browse-grid">
       
+   </div>
+
+
+   <script type="text/javascript">
+      const var_grid = document.getElementById("variants_grid")
+
+
+      //ADD TO CART WS
+
+      var add_to_cart_ws = new WebSocket('ws://127.0.0.1:8001/ac/product/add-to-cart/')
+      add_to_cart_ws.onopen = function(event){
+         console.log('WS connection open', event)
+      }
+
+      add_to_cart_ws.onmessage = function(event){
+         console.log('Message received from server', event)
+      }
+
+      add_to_cart_ws.onerror = function(event){
+         console.log('WS error occured', event)
+      }
+
+      add_to_cart_ws.onclose = function(event){
+         console.log('WS connection closed', event)
+      }
+
+      const add_to_cart = document.getElementsByClassName("add-to-cart");
+      for (let i = 0; i < add_to_cart.length; i++) {
+         console.log(add_to_cart[i])
+         add_to_cart[i].onclick = function(){
+         var parent = add_to_cart[i].parentElement.parentElement.parentElement
+         var data = {"variant_id":parent.getAttribute('variant_id'), "decision":"increment"};
+         add_to_cart_ws.send(JSON.stringify(data))
+         var add = parent.getElementsByClassName("add-to-cart")[0]
+         console.log(parent.getAttribute('variant_id'))
+         var incre = parent.getElementsByClassName("increment")[0]
+         var decre = parent.getElementsByClassName("decrement")[0]
+         var quant = parent.getElementsByClassName("num")[0]
+         if (add.style.display !== "none"){
+            incre.style.display = "inline-block";
+            decre.style.display = "inline-block";
+            quant.style.display = "inline-block";
+            quant.innerText = "1";
+            add.style.display = "none";
+         }
+         else {
+            add.style.display = "inline-block";
+         }
+        }
+      }
+
+      const increment = document.getElementsByClassName("increment");
+      for (let i = 0; i < increment.length; i++) {
+         increment[i].onclick = function(){
+            var parent = increment[i].parentElement.parentElement.parentElement
+            var quant = parent.getElementsByClassName("num")[0]
+            quant.innerText = parseInt(quant.innerText)+1;
+            var data = {"variant_id":parent.getAttribute('variant_id'), "decision":"increment"};
+            add_to_cart_ws.send(JSON.stringify(data))
+         }}
+
+      const decrement = document.getElementsByClassName("decrement");
+      for (let i = 0; i < decrement.length; i++) {
+         decrement[i].onclick = function(){
+            var parent = decrement[i].parentElement.parentElement.parentElement
+            var data = {"variant_id":parent.getAttribute('variant_id'), "decision":"decrement"};
+            add_to_cart_ws.send(JSON.stringify(data))
+            var add = parent.getElementsByClassName("add-to-cart")[0]
+            var incre = parent.getElementsByClassName("increment")[0]
+            var decre = parent.getElementsByClassName("decrement")[0]
+            var quant = parent.getElementsByClassName("num")[0]
+            if (quant.innerText === "1"){
+               add.style.display = "inline-block";
+               incre.style.display = "none";
+               decre.style.display = "none";
+               quant.style.display = "none";
+            }
+            quant.innerText = parseInt(quant.innerText)-1;
+            
+         }}
+
+
+      //PRODUCT FILTER WS
+
+      var product_filter_ws = new WebSocket('ws://127.0.0.1:8001/ac/product/filter/')
+      product_filter_ws.onopen = function(event){
+         console.log('WS connection open', event)
+      }
+
+      product_filter_ws.onmessage = function(event){
+         console.log('Message received from server', event)
+         if (event.data){
+            data = JSON.parse(event.data);
+            console.log(data["variants"])
+            var variants = data["variants"]
+            var_grid.innerHTML = "";
+            for (let v=0; v<variants.length; v++){
+               var variant = variants[v]
+               var_grid.innerHTML += `<div variant_id=${variant.variant_id} class="browse-item">
+      <a href="{% url 'detail'%}?product=${variant.product}&category=${variant.category}&title=${variant.title}&parameters=${variant.parameters}">
+      <div>
+         <video id="vid" autoplay loop muted preload="true" class="browse-video">
+            <source src=${variant.video} type='video/mp4'>
+         </video>
+      </div>
+      <div style="display:flex;flex-direction: row; "> 
+      <a href="{% url 'detail'%}?product=${variant.product}&category=${variant.category}&title=${variant.title}&parameters=${variant.parameters}">
+      <div style="flex: 2">
+         <div>${variant.title}</div>
+         <div>${variant.price}</div>
+      </div>
+      </a>
+      <div style="flex: 1">
+         <button class="decrement">-</button>
+         <p quantity=${variant.cart_quantity} class="num"></p>
+         <button class="increment">+</button>
+         <button class="add-to-cart" style="margin:none;float: right;">Add to Cart</button>
+      </div>
+      </div>
+   </div>`;
+            }
+         }
+      }
+
+      product_filter_ws.onerror = function(event){
+         console.log('WS error occured', event)
+      }
+
+      product_filter_ws.onclose = function(event){
+         console.log('WS connection closed', event)
+      }
+
+      const filters = document.getElementsByClassName("filters");
+      function filter() {
+         console.log('filter_on_load')
+         var product = document.getElementById("product")
+         var category = document.getElementById("category")
+         var data = {}
+         data["product"] = product.innerText
+         data["category"] = category.innerText
+         data["parameters"] = {}
+         for (let j=0; j<filters.length; j++){
+            if (filters[j].checked == true){
+               if(filters[j].name in data["parameters"]){
+                  data["parameters"][filters[j].name].push(filters[j].value)
+               }
+               else{
+                  data["parameters"][filters[j].name] = [filters[j].value]
+               }
+            }
+         }
+         console.log(JSON.stringify(data))
+         product_filter_ws.send(JSON.stringify(data))
+      }
+      window.onload = filter
+      var prev_handler = window.onload;
+      for (let i = 0; i < filters.length; i++) {
+         console.log(filters[i].name, filters[i].value, filters[i].checked);
+         filters[i].onclick = filter;
+      }
+
+
+
+      // //VIDEO SMOOTH LOOP
+      // var vid = document.getElementById("vid");
+      // vid.addEventListener("timeupdate", function () {
+      //     if(this.currentTime >= 10.0) {
+      //         this.currentTime = 0.0;
+      //     }
+      // });
+
+      //DEFAULT QUANTITY
+      const var_quantity = document.getElementsByClassName("num");
+      window.onload = function(){
+      if (prev_handler) {
+        prev_handler();
+      }
+      console.log("on_loan_event")
+      console.log(var_quantity.length)
+      for (let i = 0; i < var_quantity.length; i++) {
+         var parent = var_quantity[i].parentElement;
+         var add = parent.getElementsByClassName("add-to-cart")[0];
+         var incre = parent.getElementsByClassName("increment")[0];
+         var decre = parent.getElementsByClassName("decrement")[0];
+         var quantity = var_quantity[i].getAttribute('quantity');
+         if (quantity !== '0'){
+            incre.style.display = "inline-block";
+            decre.style.display = "inline-block";
+            var_quantity[i].style.display = "inline-block";
+            var_quantity[i].innerText = quantity;
+            add.style.display = "none";
+         };
+        };
+     };
+   </script>
+   
+{% endblock %}

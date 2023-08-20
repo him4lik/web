@@ -39,7 +39,12 @@ class OTPView(views.View):
 		url = API_HOST+'user/login-otp/'
 		response = requests.post(url, data={'request_id':request_id, 'otp':otp})
 		#validate response
-		return response.json()['access'] #based on validation
+		print(response, response.text)
+		tokens = {
+			'access':response.json()['access'],
+			'refresh':response.json()['refresh']
+		}
+		return tokens #based on validation
 
 	def get(self, request):
 		fm = self.form(initial={'request_id':request.GET['request_id']}) #populate request id
@@ -50,9 +55,11 @@ class OTPView(views.View):
 		fm = self.form(request.POST)
 		context = {'form':fm}
 		if fm.is_valid():
-			token = self.validate_otp(request.POST['request_id'], request.POST['otp'])
+			tokens = self.validate_otp(request.POST['request_id'], request.POST['otp'])
+			print(tokens)
 			response = redirect(reverse(self.redirect_url))
-			response.set_cookie('bearer', token, httponly=True)#, secure=True)
+			response.set_cookie('access_token', tokens['access'], httponly=True)#, secure=True)
+			response.set_cookie('refresh_token', tokens['refresh'])
 			return response
 		else:
 			return render(request, self.template_name, context) 
@@ -62,7 +69,8 @@ class LogoutView(views.View):
 	
 	def get(self, request):
 		response = redirect(reverse(self.redirect_url))
-		response.delete_cookie('bearer')#, secure=True)
+		response.delete_cookie('access_token')#, secure=True)
+		response.delete_cookie('refresh_token')
 		return response
 
 class UserProfileView(views.View):
