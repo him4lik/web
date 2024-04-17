@@ -22,6 +22,7 @@ class AssignUser(object):
         access_token = get_token(request)
         refresh_token = get_refresh_token(request)
         user = get_user(access_token)
+        print(user)
         # if not user['is_authenticated'] and refresh_token:
         #     access_token = refresh_access_token(refresh_token)
         #     user = get_user(access_token)

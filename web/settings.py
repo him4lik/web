@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-l_fej_yhdnp9=*a4*nel9hanfvj$eqjxsbgnljbd#&^%5bkfhv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -91,6 +91,10 @@ DB_NAME = os.environ['DB_NAME']
 DB_USER = os.environ['DB_USER']
 DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_HOST = os.environ['DB_HOST']
+# DB_NAME = 'inditan'
+# DB_USER = 'ubuntu'
+# DB_PASSWORD = 'google123'
+# DB_HOST = 'postgres'
 
 DATABASES = {
     'default': {
@@ -101,6 +105,13 @@ DATABASES = {
         'HOST':DB_HOST
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase', # This is where you put the name of the db file. 
+#                  # If one doesn't exist, it will be created at migration time.
+#     }
+# }
 
 
 # Password validation
@@ -145,4 +156,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://127.0.0.1:8000/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://api:8000/' if DEBUG==True else 'http://127.0.0.1:8000/'
