@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-l_fej_yhdnp9=*a4*nel9hanfvj$eqjxsbgnljbd#&^%5bkfhv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'web.localhost']
 
 
 # Application definition
@@ -105,14 +105,6 @@ DATABASES = {
         'HOST':DB_HOST
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase', # This is where you put the name of the db file. 
-#                  # If one doesn't exist, it will be created at migration time.
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -156,4 +148,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://api:8000/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://172.20.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'

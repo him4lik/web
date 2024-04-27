@@ -23,6 +23,7 @@ class HomePageView(views.View):
 	template_name = 'product/home-page.html'
 
 	def get(self, request):
+		print(request.user)
 		context = {}
 		context['data'] = get_as_user(
 			API_HOST+'inventory/product-category/',

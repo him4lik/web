@@ -9,6 +9,6 @@ RUN python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 COPY . /code
 #COPY nginx.conf /etc/nginx/
-EXPOSE 8001
+EXPOSE 8000
 # Executes the command directly without involving a shell 
 CMD ["./start_server.sh"]
