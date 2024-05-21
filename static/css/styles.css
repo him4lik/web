@@ -230,3 +230,7 @@ body a:link{
     height: 100%;
     margin-bottom: 5px;
 }
+
+#otp{
+    display: none;
+}

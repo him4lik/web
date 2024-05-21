@@ -1,5 +1,8 @@
 from django import views
+from channels.consumer import SyncConsumer, AsyncConsumer
 from django.shortcuts import render, HttpResponse, redirect, reverse
+from channels.exceptions import StopConsumer
+
 
 class View(views.View):
 	context = {}
@@ -24,3 +27,14 @@ class BaseView(views.View):
 	def post(self, request):
 		context = self.post_context_data(request)
 		return render(request, self.template_name, context) 
+
+class BaseAsyncConsumer(AsyncConsumer):
+	async def websocket_connect(self, event):
+		print('websocket connected')
+		await self.send({
+			'type': 'websocket.accept'
+			})
+
+	async def websocket_disconnect(self, event):
+		print('websocket disconnected')
+		raise StopConsumer()

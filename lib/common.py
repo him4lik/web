@@ -1,22 +1,11 @@
 import requests
 from web.settings import API_HOST
 
-def get_token(request):
-	try:
-		return "Bearer "+request.headers['Cookie'].split('; ')[1].split('=')[1]
-	except:
-		return ''
-
-def get_refresh_token(request):
-	try:
-		return request.headers['Cookie'].split('; ')[2].split('=')[1]
-	except:
-		return ''
-
 def get_user(token):
 	url = API_HOST+'user/get-user/'
-	response = requests.get(url, headers={'Authorization': token})
-	print(response, response.json())
+	print(f"Bearer {token}")
+	response = requests.get(url, headers={'Authorization': f"Bearer {token}"})
+	print(token , response, response.json())
 	#validate response
 	# print(response.text)
 	data = response.json() #if validates

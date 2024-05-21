@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect, reverse
 from django import views
 import requests
 from web.settings import API_HOST
-from lib.common import get_token, get_user
+from lib.common import get_user
 from product.forms import FilterForm
 import json
 from lib.apis import (
@@ -11,9 +11,9 @@ from lib.apis import (
 )
 from lib.base_classes import BaseView
 
-def get_products_categories(token=''):
+def get_products_categories(headers):
 	url = API_HOST+'inventory/product-category/'
-	response = requests.get(url, headers={'Authorization': token})
+	response = requests.get(url, headers=headers)
 	#validate response
 	# print(response.text)
 	data = response.json() #if validates
@@ -27,7 +27,7 @@ class HomePageView(views.View):
 		context = {}
 		context['data'] = get_as_user(
 			API_HOST+'inventory/product-category/',
-			token = request.token)
+			headers = request.api_headers)
 		context['user'] = request.user
 		print(context)
 		return render(request, self.template_name, context)
@@ -49,10 +49,10 @@ class ProductBrowseView(BaseView):
 			'product':request.GET.get('product', ''),
 			'category':request.GET.get('category', '')
 		}
-		variants = get_variants(params, token)
+		variants = get_variants(params, request.api_headers)
 		print(variants)
 		#get_product_vategories
-		products_categories = get_products_categories(token=token)
+		products_categories = get_products_categories(headers=request.api_headers)
 		
 		#get_forms_data
 		choices = {}
@@ -88,10 +88,10 @@ class ProductBrowseView(BaseView):
 			'product':request.GET.get('product', ''),
 			'category':request.GET.get('category', '')
 		}
-		data = get_variants(params, token)
+		data = get_variants(params, request.api_headers)
 		context['variants'] = data['variants']
 		context['filter_opts'] = data['filter_opts']
-		context['data'] = get_products_categories(token=token)
+		context['data'] = get_products_categories(headers=request.api_headers)
 		context['user'] = get_user(token)
 		choices = {}
 		for parameter,values in data['filter_opts'].items():
@@ -117,7 +117,7 @@ class ProductBrowseView(BaseView):
 		context['forms']=forms
 		if any([fm[1].is_valid() for fm in forms]):
 			params['parameters'] = json.dumps(data)
-			context['variants'] = get_variants(params, token)['variants']
+			context['variants'] = get_variants(params, request.api_headers)['variants']
 		context['product'] = request.GET.get('product', '')
 		context['category'] = request.GET.get('category', '')
 		return context
@@ -125,25 +125,25 @@ class ProductBrowseView(BaseView):
 class ProductDetailView(views.View):
 	template_name = 'product/detail.html'
 	
-	def get_variants(self, params):
+	def get_variants(self, params, headers):
 		url = API_HOST+'inventory/browse/'
-		response = requests.get(url, params=params)
+		response = requests.get(url, params=params, headers=headers)
 		#validate response
 		data = response.json() #if validates
 		return data
 
 	def get(self, request):
-		token=get_token(request)
+		token = request.token
 		params ={
 			'product':request.GET.get('product', None),
 			'category':request.GET.get('category', None),
 			'title':request.GET.get('title', None)
 		}
 		context = {}
-		data = self.get_variants(params, token)
+		data = self.get_variants(params, request.api_headers)
 		context['variants'] = data['variants']
 		context['filter_opts'] = data['filter_opts']
-		context['data'] = get_products_categories(token=token)
+		context['data'] = get_products_categories(headers=request.api_headers)
 		context['user'] = get_user(token)
 		return render(request, self.template_name, context)
 

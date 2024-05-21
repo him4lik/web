@@ -32,8 +32,8 @@ ALLOWED_HOSTS = ['*', 'web.localhost']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'channels',
+    # 'daphne',
+    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,8 +79,8 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
         ]
 
-# WSGI_APPLICATION = 'web.wsgi.application'
-ASGI_APPLICATION = 'web.asgi.application'
+WSGI_APPLICATION = 'web.wsgi.application'
+# ASGI_APPLICATION = 'web.asgi.application'
 
 
 
@@ -148,4 +148,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://172.20.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://172.19.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'

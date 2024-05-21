@@ -69,7 +69,7 @@
 
       //ADD TO CART WS
 
-      var add_to_cart_ws = new WebSocket('ws://127.0.0.1:8001/ac/product/add-to-cart/')
+      var add_to_cart_ws = new WebSocket('ws://127.0.0.1:8101/ac/product/add-to-cart/')
       add_to_cart_ws.onopen = function(event){
          console.log('WS connection open', event)
       }
@@ -144,7 +144,7 @@
 
       //PRODUCT FILTER WS
 
-      var product_filter_ws = new WebSocket('ws://127.0.0.1:8001/ac/product/filter/')
+      var product_filter_ws = new WebSocket('ws://127.0.0.1:8101/ac/product/filter/')
       product_filter_ws.onopen = function(event){
          console.log('WS connection open', event)
       }

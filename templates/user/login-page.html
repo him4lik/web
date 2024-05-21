@@ -14,16 +14,105 @@
          {% csrf_token%}
          <div>
             {{form.non_field_errors}}
+            {{form.field}}
             {%for field in form%}
-            <div>
+            {%if field.name == 'phone'%}
+            <div class='phone'>
                {{field}}
+               
             </div>
+            {%elif field.name == 'request_id'%}
+            <div id='request_id'>
+               {{field}}
+               
+            </div>
+            {%else%}
+            <div id="otp">
+               {{field}}
+               
+            </div>
+            {%endif%}
             {%endfor%}
          </div>
          <div>
-            <input type='Submit' value='Get OTP' >
+            <input type='Submit' value='Login' >
          </div>
       </form>
+      <button class='send_otp' id='send_otp'>send otp</button>
    </div>
+   <script type="text/javascript">
+      // const var_grid = document.getElementById("variants_grid")
+      //SEND OTP WS
+
+      // var send_otp_ws = new WebSocket('ws://127.0.0.1:8101/ac/user/send-otp/')
+      // send_otp_ws.onopen = function(event){
+      //    console.log('WS connection open', event)
+      // }
+
+      // send_otp_ws.onmessage = function(event){
+      //    console.log('Message received from server', event)
+      // }
+
+      // send_otp_ws.onerror = function(event){
+      //    console.log('WS error occured', event)
+      // }
+
+      // send_otp_ws.onclose = function(event){
+      //    console.log('WS connection closed', event)
+      // }
+
+      // const send_otp = document.getElementsByClassName("send_otp");
+      // // for (let i = 0; i < send_otp.length; i++) {
+      //    send_otp[0].onclick = function(){
+      //    // var parent = send_otp[0].parentElement.parentElement.parentElement
+      //    var phone_ele = document.getElementsByClassName("phone")
+      //    var data = {"phone":phone_ele[0].getElementsByTagName('input')[0].value};
+      //    res = send_otp_ws.send(JSON.stringify(data))
+      //    console.log(res)
+      //    var otp = document.getElementsByClassName("otp")[0]
+      //    if (! otp.style.display){
+      //       otp.style.display = "inline-block";
+      //       send_otp.style.
+      //    }
+      //   }
+      // }
+
+      var send_otp_btn = document.getElementById('send_otp');
+      send_otp_btn.addEventListener('click', myFetcher);
+
+      function myFetcher() {
+         const requestOptions = {
+            'Method':'GET',
+            'Headers': {
+               'Content-Type': 'application/json',
+              }
+            };
+         var phone_ele = document.getElementsByClassName("phone")
+         var data = {"phone":phone_ele[0].getElementsByTagName('input')[0].value};
+         const queryParams = new URLSearchParams(data);
+         fetch('http://172.19.0.1:8001/api/test1/user/login-otp?'+queryParams, requestOptions)
+            .then(
+               function(response) {
+                  if (response.status !== 200) {
+                     console.log('Looks like there was a problem. Status Code: '+response.status);
+                     return;
+                  }
+                  response.json().then(function(data) {
+                     console.log(data);
+                     var otp = document.getElementById('otp');
+                     var request_id = document.getElementById('request_id').getElementsByTagName('input')[0];
+                     console.log(otp.style);
+                     otp.style.display = 'inline';
+                     console.log(data.request_id);
+                     request_id.value = data.request_id;
+                     console.log(request_id.value)
+                  });
+               })
+            .catch(function(err) {
+               console.log('Fetch Error :-S', err);
+            })
+         }
+</script>
+
 {% endblock %}
 

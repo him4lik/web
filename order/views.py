@@ -16,8 +16,8 @@ class CartView(View):
 	@login_required
 	def get(self, request):
 		self.context['user'] = request.user
-		self.context['data'] = get_products_categories(token=request.token)
-		self.context['cart_items'] = get_cart_items(token=request.token)
+		self.context['data'] = get_products_categories(headers=request.api_headers)
+		self.context['cart_items'] = get_cart_items(headers=request.api_headers)
 		print(self.context)
 		return render(request, self.template_name, self.context)
 
