@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   <title>INDITAN | Home Page</title>
+{% endblock %}
+{%block navbar%}
+{%endblock%}
+{% block login-page %}
+<div class="login-otp-form">
+   <div>
+      <p>Login Form </p>
+   </div>
+   <form method='POST' action=''>
+         {% csrf_token%}
+         <div>
+            {{form.non_field_errors}}
+            {{form.field}}
+            {%for field in form%}
+            {%if field.name == 'phone'%}
+            <div class='phone'>
+               {{field}}
+               
+            </div>
+            {%elif field.name == 'request_id'%}
+            <div id='request_id'>
+               {{field}}
+               
+            </div>
+            {%else%}
+            <div id="otp">
+               {{field}}
+               
+            </div>
+            {%endif%}
+            {%endfor%}
+         </div>
+         <div>
+            <input type='hidden' value='Login' >
+         </div>
+      </form>
+      <button class='send_otp' id='send_otp'>send otp</button>
+   </div>
+   <script type="text/javascript" src="{% static '/js/main.js' %}">
+      
+</script>
+
+{% endblock %}
+

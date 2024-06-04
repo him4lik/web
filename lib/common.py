@@ -3,6 +3,7 @@ from web.settings import API_HOST
 
 def get_user(token):
 	url = API_HOST+'user/get-user/'
+	print(url)
 	print(f"Bearer {token}")
 	response = requests.get(url, headers={'Authorization': f"Bearer {token}"})
 	print(token , response, response.json())

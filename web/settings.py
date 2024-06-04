@@ -62,7 +62,6 @@ ROOT_URLCONF = 'web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,7 +135,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -148,4 +146,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://172.19.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://172.18.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'

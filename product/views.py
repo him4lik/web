@@ -12,7 +12,7 @@ from lib.apis import (
 from lib.base_classes import BaseView
 
 def get_products_categories(headers):
-	url = API_HOST+'inventory/product-category/'
+	url = API_HOST+'product-category/'
 	response = requests.get(url, headers=headers)
 	#validate response
 	# print(response.text)
@@ -20,7 +20,7 @@ def get_products_categories(headers):
 	return data
 
 class HomePageView(views.View):
-	template_name = 'product/home-page.html'
+	template_name = 'home-page.html'
 
 	def get(self, request):
 		print(request.user)
@@ -37,7 +37,7 @@ class HomePageView(views.View):
 		return render(request, self.template_name, context)
 
 class ProductBrowseView(BaseView):
-	template_name = 'product/browse.html'
+	template_name = 'browse.html'
 	form = FilterForm
 
 	def get_context_data(self, request):
@@ -123,7 +123,7 @@ class ProductBrowseView(BaseView):
 		return context
 
 class ProductDetailView(views.View):
-	template_name = 'product/detail.html'
+	template_name = 'detail.html'
 	
 	def get_variants(self, params, headers):
 		url = API_HOST+'inventory/browse/'

@@ -10,7 +10,7 @@ from lib.decorators import login_required
 # from django.contrib.auth.decorators import login_required
 
 class CartView(View):
-	template_name = 'order/cart.html'
+	template_name = 'cart.html'
 	redirect_url = 'login'
 
 	@login_required
