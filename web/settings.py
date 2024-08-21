@@ -146,4 +146,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://172.18.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://172.19.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'
