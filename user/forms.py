@@ -13,9 +13,9 @@ class LoginFormOld(forms.Form):
 		if len(phone)!=10:
 			raise forms.ValidationError('Invalid phone')
 
-		# user=authenticate(email_or_phone=e_or_p, password=password)
+		# user = authenticate(email_or_phone=e_or_p, password=password)
 
-		# if user==None:
+		# if user == None:
 		# 	raise forms.ValidationError("User doesn't exist")
 		# if user.is_staff:
 		# 	raise  forms.ValidationError("Staff users don't have access")
@@ -42,9 +42,9 @@ class LoginForm(forms.Form):
 		if len(otp)!=6:
 			raise forms.ValidationError('Invalid otp')
 
-		# user=authenticate(email_or_phone=e_or_p, password=password)
+		# user = authenticate(email_or_phone=e_or_p, password=password)
 
-		# if user==None:
+		# if user == None:
 		# 	raise forms.ValidationError("User doesn't exist")
 		# if user.is_staff:
 		# 	raise  forms.ValidationError("Staff users don't have access")
@@ -63,9 +63,9 @@ class OTPForm(forms.Form):
 		if len(otp)!=6:
 			raise forms.ValidationError('Invalid otp')
 
-		# user=authenticate(email_or_phone=e_or_p, password=password)
+		# user = authenticate(email_or_phone=e_or_p, password=password)
 
-		# if user==None:
+		# if user == None:
 		# 	raise forms.ValidationError("User doesn't exist")
 		# if user.is_staff:
 		# 	raise  forms.ValidationError("Staff users don't have access")

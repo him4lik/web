@@ -12,10 +12,8 @@ from lib.apis import (
 from lib.base_classes import BaseView
 
 def get_products_categories(headers):
-	url = API_HOST+'product-category/'
+	url = API_HOST+'inventory/product-category/'
 	response = requests.get(url, headers=headers)
-	#validate response
-	# print(response.text)
 	data = response.json() #if validates
 	return data
 
@@ -23,13 +21,11 @@ class HomePageView(views.View):
 	template_name = 'home-page.html'
 
 	def get(self, request):
-		print(request.user)
 		context = {}
 		context['data'] = get_as_user(
 			API_HOST+'inventory/product-category/',
 			headers = request.api_headers)
 		context['user'] = request.user
-		print(context)
 		return render(request, self.template_name, context)
 
 	def post(self, request):
@@ -50,7 +46,6 @@ class ProductBrowseView(BaseView):
 			'category':request.GET.get('category', '')
 		}
 		variants = get_variants(params, request.api_headers)
-		print(variants)
 		#get_product_vategories
 		products_categories = get_products_categories(headers=request.api_headers)
 		
@@ -69,7 +64,6 @@ class ProductBrowseView(BaseView):
 
 		#context
 		context['variants'] = variants['variants']
-		print(context['variants'])
 		context['filter_opts'] = variants['filter_opts']
 		context['data'] = products_categories
 		context['user'] = request.user
@@ -98,11 +92,11 @@ class ProductBrowseView(BaseView):
 			choices[parameter]=[]
 			for val in values:
 				choices[parameter].append((parameter, val))
-		d=dict(request.POST)
-		req=request.POST.getlist('parameter_val')
+		d = dict(request.POST)
+		req = request.POST.getlist('parameter_val')
 		data = {}
 		for i in req:
-			dt=i.split(',')
+			dt = i.split(',')
 			try:
 				data[dt[0]].append(dt[1])
 			except:
@@ -128,7 +122,6 @@ class ProductDetailView(views.View):
 	def get_variants(self, params, headers):
 		url = API_HOST+'inventory/browse/'
 		response = requests.get(url, params=params, headers=headers)
-		#validate response
 		data = response.json() #if validates
 		return data
 

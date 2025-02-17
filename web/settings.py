@@ -32,8 +32,6 @@ ALLOWED_HOSTS = ['*', 'web.localhost']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
-    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -90,10 +88,6 @@ DB_NAME = os.environ['DB_NAME']
 DB_USER = os.environ['DB_USER']
 DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_HOST = os.environ['DB_HOST']
-# DB_NAME = 'inditan'
-# DB_USER = 'ubuntu'
-# DB_PASSWORD = 'google123'
-# DB_HOST = 'postgres'
 
 DATABASES = {
     'default': {
@@ -146,4 +140,4 @@ STATIC_ROOT = 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_HOST = 'http://172.19.0.1:8001/api/test1/' if DEBUG==True else 'http://127.0.0.1:8000/'
+API_HOST = 'http://api:8000/api/test1/' if DEBUG==True else ''

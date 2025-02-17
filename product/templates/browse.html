@@ -10,7 +10,7 @@
    <div style="font-size: 15px;display:inline-block;">({{variants|length}})</div>
    <div style="font-size: 20px">{{variants.0.product_description}}</div>
    </div>
-     <!--  <form method='POST' action=''>
+      <!-- <form method='POST' action=''>
          {% csrf_token%}
          {%for form in forms%}
             {{form.0}}
@@ -22,8 +22,8 @@
          <div>
             <input type='Submit' value='Apply fiters' >
          </div>
-      </form> -->
-   
+      </form>
+    -->
    {%for filter in filters%}
    {{filter.0}}<br>
    {%for parameter in filter.1%}
@@ -69,7 +69,7 @@
 
       //ADD TO CART WS
 
-      var add_to_cart_ws = new WebSocket('ws://127.0.0.1:8101/ac/product/add-to-cart/')
+      var add_to_cart_ws = new WebSocket('ws://localhost:8101/ac/product/add-to-cart/')
       add_to_cart_ws.onopen = function(event){
          console.log('WS connection open', event)
       }

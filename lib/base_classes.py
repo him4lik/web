@@ -30,11 +30,9 @@ class BaseView(views.View):
 
 class BaseAsyncConsumer(AsyncConsumer):
 	async def websocket_connect(self, event):
-		print('websocket connected')
 		await self.send({
 			'type': 'websocket.accept'
 			})
 
 	async def websocket_disconnect(self, event):
-		print('websocket disconnected')
 		raise StopConsumer()
