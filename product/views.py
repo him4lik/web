@@ -17,20 +17,20 @@ def get_products_categories(headers):
 	data = response.json() #if validates
 	return data
 
-class HomePageView(views.View):
+class HomePageView(BaseView):
 	template_name = 'home-page.html'
 
-	def get(self, request):
+	def get_context_data(self, request):
 		context = {}
 		context['data'] = get_as_user(
 			API_HOST+'inventory/product-category/',
 			headers = request.api_headers)
 		context['user'] = request.user
-		return render(request, self.template_name, context)
+		return context
 
-	def post(self, request):
+	def post_context_data(self, request):
 		context = {}
-		return render(request, self.template_name, context)
+		return context
 
 class ProductBrowseView(BaseView):
 	template_name = 'browse.html'

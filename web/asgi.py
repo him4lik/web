@@ -8,6 +8,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
 application = ProtocolTypeRouter({
 	'http': get_asgi_application(),
 	'websocket':URLRouter(
-		web.routing.ws_urlpatterns
+		routing.ws_urlpatterns
 		)
 	})

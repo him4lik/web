@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'user',
     'product',
     'order'
@@ -76,8 +77,8 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
         ]
 
-WSGI_APPLICATION = 'web.wsgi.application'
-# ASGI_APPLICATION = 'web.asgi.application'
+# WSGI_APPLICATION = 'web.wsgi.application'
+ASGI_APPLICATION = 'web.asgi.application'
 
 
 
@@ -116,6 +117,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
 
 
 # Internationalization
